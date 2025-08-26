@@ -1,4 +1,4 @@
-package w4.arrStack;
+
 
 public class ArrStack {
     private int[] arr;   // storage

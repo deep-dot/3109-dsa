@@ -1,4 +1,4 @@
-package w4.arrayList;
+
 public class MyArrayList<T> {
     private Object[] elements;
     private int size;

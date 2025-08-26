@@ -1,4 +1,4 @@
-package w4.linkedStack;
+
 
 public class Main {
     public static void main(String[] args) {

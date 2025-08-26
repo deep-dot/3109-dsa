@@ -1,4 +1,3 @@
-package w4.arrayQueue;
 
 public class Arrque {
     private int[] arr;       // array to store queue elements

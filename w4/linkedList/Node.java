@@ -1,4 +1,3 @@
-package w4.linkedList;
 
 class Node<T> {
     T data;

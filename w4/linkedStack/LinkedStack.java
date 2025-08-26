@@ -1,4 +1,4 @@
-package w4.linkedStack;
+
 
 public class LinkedStack<T> {
     private Node<T> top; // top of stack (head)

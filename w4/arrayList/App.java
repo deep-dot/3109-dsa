@@ -1,4 +1,5 @@
-package w4.arrayList;
+
+
 public class App {
     public static void main(String[] args) throws Exception {
         MyArrayList<String> list = new MyArrayList<>();

@@ -132,7 +132,7 @@ public class MyLinkedList<T> {
         return current.data;
     }
 
-    public void addElement(T v){
+    public void add(T v){
         Node<T> newNode = new Node<>(v);
         if(head == null){
             head = newNode;
@@ -144,6 +144,27 @@ public class MyLinkedList<T> {
             current.next = newNode;
             size++;
         }
+    }
 
+        // Remove element by index
+    public void remove(int index) {
+        checkIndex(index);
+        if (index == 0) {
+            head = head.next;
+        } else {
+            Node<T> current = head;
+            for (int i = 0; i < index - 1; i++) {
+                current = current.next;
+            }
+            current.next = current.next.next;
+        }
+        size--;
+    }
+
+        // Check valid index
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
