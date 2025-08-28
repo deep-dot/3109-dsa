@@ -1,0 +1,15 @@
+# Eclipse / Java
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+target/
+*.log
+*.prefs
+
+# MacOS system files
+.DS_Store
+
+# Other build artifacts
+*.class
