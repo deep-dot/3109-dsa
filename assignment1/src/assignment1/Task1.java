@@ -4,59 +4,71 @@ import java.util.Arrays;
 
 public class Task1 {
 
-    // Public entry: advances to the next permutation (per the given spec).
-    // Returns true if advanced, false if no further permutations exist.
     public static boolean nextPermutation(int[] a) {
         return nextPermutation(a, 0, a.length);
     }
 
-    // Works on the window a[start .. start+len-1], which (by construction)
-    // is a permutation of {1..len}.
+//    a recursive function 
+//    named nextPermutation that generates the next permutation 
+//    of a given sequence of integers. 
     private static boolean nextPermutation(int[] a, int start, int len) {
-        if (len <= 1) return false; // no more permutations for 0/1 element
+        if (len <= 1) return false; // no permutations for 0 and 1 element
 
-        // Find the position 'pos' of the maximum element n (= len) in this window
+        // Find the position 'pos' of the maximum element n 
         int n = len;
         int pos = -1;
         for (int k = 0; k < len; k++) {
-            if (a[start + k] == n) { pos = start + k; break; }
+            if (a[start + k] == n) { 
+            	pos = start + k; 
+            	break; 
+            	}
         }
 
         if (pos != start) {
-            // Case 1: n is NOT in the first position -> swap a_i with a_{i-1}
+//        	Case 1: If the maximum element n is not in the first 
+//        	position:
+//        	• Swap ai  with ai-1. 
+//        	• Return true to indicate that the next
             swap(a, pos, pos - 1);
             return true;
         }
 
-        // Case 2: n IS in the first position -> recurse on (a2..an)
-        boolean advanced = nextPermutation(a, start + 1, len - 1);
-        if (!advanced) return false; // no further permutations
+//        Case 2: If the maximum element n is in the first 
+//        position: 
+//        • Recursively call nextPermutation on the 
+//        subarray (a2,…,an), which represents a 
+//        permutation of (n-1) elements. 
+        boolean result = nextPermutation(a, start + 1, len - 1);
+        if (!result) return false; // no further permutations
 
-        // After a successful recursive step, "append a1" to the result:
-        // rotate the current window left by 1 (move first element to the end).
-        rotateLeftByOne(a, start, len);
+//      • If the recursive call returns true: 
+//      • Append a1 to the resulting permutation 
+//      of (n-1) elements. 
+//      • If the recursive call returns false, indicate that no 
+//      further permutations are available.
+        
+        moveLeftByOne(a, start, len);
         return true;
     }
 
     private static void swap(int[] a, int i, int j) {
-        int t = a[i]; a[i] = a[j]; a[j] = t;
+        int t = a[i]; 
+        a[i] = a[j]; 
+        a[j] = t;
     }
 
-    private static void rotateLeftByOne(int[] a, int start, int len) {
+    private static void moveLeftByOne(int[] a, int start, int len) {
         int first = a[start];
         for (int i = start; i < start + len - 1; i++) {
             a[i] = a[i + 1];
         }
         a[start + len - 1] = first;
     }
-
-    // Demo
     public static void main(String[] args) {
         int[] a = {1, 2, 3};
         do {
             System.out.println(Arrays.toString(a));
         } while (nextPermutation(a));
-        // Prints in this order: [1,2,3], [1,3,2], [3,1,2], [2,1,3], [2,3,1], [3,2,1]
     }
 }
 
