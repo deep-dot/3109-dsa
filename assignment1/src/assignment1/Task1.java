@@ -4,10 +4,6 @@ import java.util.Arrays;
 
 public class Task1 {
 
-	public static boolean nextPermutation(int[] a) {
-		return nextPermutation(a, 0, a.length);
-	}
-
 //    a recursive function 
 //    named nextPermutation that generates the next permutation 
 //    of a given sequence of integers. 
@@ -71,7 +67,7 @@ public class Task1 {
 		int[] a = { 1, 2, 3 };
 		do {
 			System.out.println(Arrays.toString(a));
-		} while (nextPermutation(a));
+		} while (nextPermutation(a, 0, a.length));
 	}
 }
 
