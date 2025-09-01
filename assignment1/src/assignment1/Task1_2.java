@@ -15,17 +15,18 @@ public class Task1_2 {
         while (true) { // this condition will remain true until array length is 1
             int pos = posOfMaxNum(a, start, len);// find position of maximum number in array.
 
+         // Case 1: max not at front, swap it one step left
             if (pos > start) {
                 swap(a, pos, pos - 1);// If the maximum is not at the first position, swap it with its left neighbour and return.
                 for (int s = timesOfMaxAtFront; s >= 0; s--) {
-                    moveLeftByOne(a, s, a.length - s);// will work only if max number is reached at first position
+                    moveLeftByOne(a, s, a.length - s);// will work only if max number is reached at first position or tail array's big number reached at first position
                 }
                 return true;
             }
 
             if (len == 1) return false;
            
-            //when maximum number is equal to start position then all vaues are updated. 
+         // Case 2: max at front position then all vaues are updated. 
             //And If the maximum is at the first position, shrink the array by moving its start right by one.
             timesOfMaxAtFront++;         
             start += 1;

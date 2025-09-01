@@ -5,112 +5,167 @@ import java.util.Arrays;
 
 public class Task2 {
 
-    // ---- counters ----
-    public static long qsComps, msComps, isComps;
+	// ---- counters ----
+	public static long qsComps, msComps, isComps;
 
-    // ---- insertion sort (counts comparisons) ----
-    public static void insertionSort(int[] a) {
-        isComps = 0;
-        for (int i = 1; i < a.length; i++) {
-            int key = a[i];
-            int j = i - 1;
-            // Compare while moving larger elements to the right
-            while (j >= 0 && lessIS(key, a[j])) { // key < a[j]
-                a[j + 1] = a[j];
-                j--;
-            }
-            a[j + 1] = key;
-        }
-    }
-    private static boolean lessIS(int x, int y) {
-        isComps++;                  // one element-to-element comparison
-        return x < y;
-    }
+	// ---- insertion sort (counts comparisons) ----
+	public static void insertionSort(int[] a) {
+		isComps = 0;
+		for (int i = 1; i < a.length; i++) {
+			int t = a[i];
+			for (int j = i - 1; j >= 0 && t < a[j]; j--) {
+				a[j + 1] = a[j];
+				a[j] = t;
+				isComps++;
+			}
+		}
+	}
 
-    // ---- mergesort (counts comparisons only when merging) ----
-    public static void mergeSort(int[] a) {
-        msComps = 0;
-        int[] tmp = new int[a.length];
-        msort(a, 0, a.length - 1, tmp);
-    }
-    private static void msort(int[] a, int l, int r, int[] tmp) {
-        if (l >= r) return;
-        int m = (l + r) >>> 1;
-        msort(a, l, m, tmp);
-        msort(a, m + 1, r, tmp);
-        merge(a, l, m, r, tmp);
-    }
-    private static void merge(int[] a, int l, int m, int r, int[] tmp) {
-        int i = l, j = m + 1, k = l;
-        while (i <= m && j <= r) {
-            if (lessMS(a[i], a[j])) tmp[k++] = a[i++];
-            else                     tmp[k++] = a[j++];
-        }
-        while (i <= m) tmp[k++] = a[i++];
-        while (j <= r) tmp[k++] = a[j++];
-        for (int t = l; t <= r; t++) a[t] = tmp[t];
-    }
-    private static boolean lessMS(int x, int y) {
-        msComps++;                  // compare left[i] vs right[j]
-        return x <= y;              // stable; ties from left
-    }
+	// mergesort
+	public static void mergeSort(int[] a) {
+		msComps = 0;
+		msort(a, 0, a.length - 1);
+	}
 
-    // ---- quicksort (Lomuto partition; counts comparisons in partition) ----
-    public static void quickSort(int[] a) {
-        qsComps = 0;
-        qsort(a, 0, a.length - 1);
-    }
-    private static void qsort(int[] a, int l, int r) {
-        if (l >= r) return;
-        int p = partition(a, l, r); // pivot = a[r]
-        qsort(a, l, p - 1);
-        qsort(a, p + 1, r);
-    }
-    private static int partition(int[] a, int l, int r) {
-        int pivot = a[r];
-        int i = l - 1;
-        for (int j = l; j < r; j++) {
-            if (lessQS(a[j], pivot)) { // compare a[j] <= pivot
-                i++;
-                swap(a, i, j);
-            }
-        }
-        swap(a, i + 1, r);
-        return i + 1;
-    }
-    private static boolean lessQS(int x, int pivot) {
-        qsComps++;                  // one element-to-pivot comparison
-        return x <= pivot;
-    }
+	private static void msort(int[] a, int first, int last) {
+		if (first >= last) return;
+		int mid = (int) Math.floor((first + last) / 2);
+		msort(a, first, (int) (mid));
+		msort(a, (int) (mid + 1), last);
+		merge(a, first, mid, last);
+	}
 
-    // ---- helpers ----
-    private static void swap(int[] a, int i, int j) {
-        int t = a[i]; a[i] = a[j]; a[j] = t;
-    }
+	private static void merge(int[] a, int first, int mid, int last) {
+		int[] temp = new int[last + 1];
+		int first1 = first;
+		int last1 = mid;
+		int first2 = mid + 1;
+		int last2 = last;
+		int index = first1;
 
-    // ---- tiny self-checks on size 3–4 arrays ----
-    public static void main(String[] args) {
-        int[][] tests = {
-            {3,2,1},
-            {2,1,3},
-            {3,1,2,0},
-            {1,1,2},          // duplicates to see mergesort stability & quicksort count behavior
-        };
+		while (first1 <= last1 && first2 <= last2) {
+			msComps++;
+			if (a[first1] < a[first2]) {
+				temp[index++] = a[first1++];
+			} else {
+				temp[index++] = a[first2++];
+			}
+		}
+		while (first1 <= last1) {
+			temp[index++] = a[first1++];
+		}
+		while (first2 <= last2) {
+			temp[index++] = a[first2++];
+		}
+		for (index = first; index <= last; index++)
+			a[index] = temp[index];
+	}
 
-        for (int[] src : tests) {
-            System.out.println("\nArray: " + Arrays.toString(src));
+//	When merge(a, first, mid, last) runs, both halves a[first..mid] and a[mid+1..last] are already sorted in-place by the two earlier msort calls. merge then uses indices to read those actual values:
+//
+//		first1 is a cursor in the left half → current value is a[first1]
+//
+//		first2 is a cursor in the right half → current value is a[first2]
+//
+//		index is where we’re writing in temp
+//
+//		Because Java arrays are reference types, every call works on the same array object. So when msort(a, first, mid) returns, it has already rearranged the numbers in a[first..mid]. merge “knows” the values simply by reading a[i] at those indices.
+//
+//		Tiny trace to make it concrete
+//
+//		Start: a = [5, 2, 4, 6]
+//
+//		msort(a, 0, 1) sorts the left half in place → a becomes [2, 5, 4, 6]
+//
+//		msort(a, 2, 3) sorts the right half (already [4,6]) → a stays [2, 5, 4, 6]
+//
+//		merge(a, 0, 1, 3) now sees:
+//
+//		left half = a[0..1] = [2,5]
+//
+//		right half = a[2..3] = [4,6]
+//
+//		Inside merge:
+//
+//		Set i=0 (left), j=2 (right), k=0 (temp write)
+//
+//		Compare values a[i]=2 and a[j]=4 → take 2 → temp[0]=2, i=1, k=1
+//
+//		Compare a[i]=5 and a[j]=4 → take 4 → temp[1]=4, j=3, k=2
+//
+//		Compare a[i]=5 and a[j]=6 → take 5 → temp[2]=5, i=2, k=3
+//
+//		Left side finished; copy leftover right (6) → temp[3]=6
+//
+//		Copy temp[0..3] back to a[0..3] → a = [2,4,5,6]
 
-            int[] a1 = Arrays.copyOf(src, src.length);
-            insertionSort(a1);
-            System.out.println("Insertion : " + Arrays.toString(a1) + " | comps=" + isComps);
+	// quicksort
+	public static void quickSort(int[] a) {
+		qsComps = 0;
+		qsort(a, 0, a.length - 1);
+	}
 
-            int[] a2 = Arrays.copyOf(src, src.length);
-            mergeSort(a2);
-            System.out.println("Merge     : " + Arrays.toString(a2) + " | comps=" + msComps);
+	private static void qsort(int[] a, int left, int right) {
+		if (left >= right) {
+			qsComps++;
+			return;
+		}
+		int p = partition(a, left, right);
+		qsort(a, left, p - 1);
+		qsort(a, p + 1, right);
+	}
 
-            int[] a3 = Arrays.copyOf(src, src.length);
-            quickSort(a3);
-            System.out.println("Quick     : " + Arrays.toString(a3) + " | comps=" + qsComps);
-        }
-    }
+	private static int partition(int[] a, int left, int right) {
+		while (true) {
+			while (left < right && a[left] < a[right]) {
+				right--;
+				qsComps++;
+			}
+			
+			if (left < right) {
+				swap(a, left++, right);
+			}
+			else
+				return left;
+			
+			while (left < right && a[left] < a[right]) {
+				left++;
+				qsComps++;
+			}
+			if (left < right)
+				swap(a, left, right--);
+			else
+				return right;
+		}
+	}
+
+	private static void swap(int[] a, int i, int j) {
+		int t = a[i];
+		a[i] = a[j];
+		a[j] = t;
+	}
+
+	// ---- tiny self-checks on size 3–4 arrays ----
+	public static void main(String[] args) {
+		int[][] tests = { { 3, 2, 1 }, { 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 1, 2 }, // duplicates to see mergesort
+																					// stability & quicksort count
+																					// behavior
+		};
+
+		for (int[] src : tests) {
+			System.out.println("\nArray: " + Arrays.toString(src));
+
+			int[] a1 = Arrays.copyOf(src, src.length);
+			insertionSort(a1);
+			System.out.println("Insertion : " + Arrays.toString(a1) + " | comps=" + isComps);
+
+			int[] a2 = Arrays.copyOf(src, src.length);
+			mergeSort(a2);
+			System.out.println("Merge     : " + Arrays.toString(a2) + " | comps=" + msComps);
+
+			int[] a3 = Arrays.copyOf(src, src.length);
+			quickSort(a3);
+			System.out.println("Quick     : " + Arrays.toString(a3) + " | comps=" + qsComps);
+		}
+	}
 }
