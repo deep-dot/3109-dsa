@@ -7,7 +7,7 @@ public class Task1 {
 //    a recursive function 
 //    named nextPermutation that generates the next permutation 
 //    of a given sequence of integers. 
-	private static boolean nextPermutation(int[] a, int start, int len) {
+	public static boolean nextPermutationRec(int[] a, int start, int len) {
 		if (len <= 1)
 			return false; // no permutations for 0 and 1 element
 
@@ -35,7 +35,7 @@ public class Task1 {
 //        • Recursively call nextPermutation on the 
 //        subarray (a2,…,an), which represents a 
 //        permutation of (n-1) elements. 
-		boolean result = nextPermutation(a, start + 1, len - 1);
+		boolean result = nextPermutationRec(a, start + 1, len - 1);
 		if (!result)
 			return false; // no further permutations
 
@@ -67,7 +67,7 @@ public class Task1 {
 		int[] a = { 1, 2, 3 };
 		do {
 			System.out.println(Arrays.toString(a));
-		} while (nextPermutation(a, 0, a.length));
+		} while (nextPermutationRec(a, 0, a.length));
 	}
 }
 

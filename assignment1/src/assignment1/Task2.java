@@ -9,7 +9,7 @@ public class Task2 {
 	public static long qsComps, msComps, isComps;
 
 	// ---- insertion sort (counts comparisons) ----
-	public static void insertionSort(int[] a) {
+	public static long insertionSort(int[] a) {
 		isComps = 0;
 		for (int i = 1; i < a.length; i++) {
 			int t = a[i];
@@ -19,23 +19,27 @@ public class Task2 {
 				isComps++;
 			}
 		}
+		
+		return isComps;
 	}
 
 	// mergesort
-	public static void mergeSort(int[] a) {
+	public static long mergeSort(int[] a) {
 		msComps = 0;
-		msort(a, 0, a.length - 1);
+		return msort(a, 0, a.length - 1);
 	}
 
-	private static void msort(int[] a, int first, int last) {
-		if (first >= last) return;
+	private static long msort(int[] a, int first, int last) {
+		if (first >= last) return 0;	// no comparisons
 		int mid = (int) Math.floor((first + last) / 2);
-		msort(a, first, (int) (mid));
-		msort(a, (int) (mid + 1), last);
-		merge(a, first, mid, last);
+		long cmps = 0;
+		cmps += msort(a, first, mid); // comparisons from left half
+		cmps += msort(a, mid + 1, last); // comparisons from right half
+		cmps += merge(a, first, mid, last); // comparisons while merging
+		return cmps;
 	}
 
-	private static void merge(int[] a, int first, int mid, int last) {
+	private static long merge(int[] a, int first, int mid, int last) {
 		int[] temp = new int[last + 1];
 		int first1 = first;
 		int last1 = mid;
@@ -59,6 +63,8 @@ public class Task2 {
 		}
 		for (index = first; index <= last; index++)
 			a[index] = temp[index];
+		
+		return msComps;
 	}
 
 //	When merge(a, first, mid, last) runs, both halves a[first..mid] and a[mid+1..last] are already sorted in-place by the two earlier msort calls. merge then uses indices to read those actual values:
@@ -100,16 +106,15 @@ public class Task2 {
 //		Copy temp[0..3] back to a[0..3] → a = [2,4,5,6]
 
 	// quicksort
-	public static void quickSort(int[] a) {
+	public static long quickSort(int[] a) {
 		qsComps = 0;
 		qsort(a, 0, a.length - 1);
+		return qsComps;
 	}
 
 	private static void qsort(int[] a, int left, int right) {
-		if (left >= right) {
-			qsComps++;
-			return;
-		}
+		if (left >= right) return;
+		
 		int p = partition(a, left, right);
 		qsort(a, left, p - 1);
 		qsort(a, p + 1, right);
@@ -147,23 +152,20 @@ public class Task2 {
 
 	// ---- tiny self-checks on size 3–4 arrays ----
 	public static void main(String[] args) {
-		int[][] tests = { { 3, 2, 1 }, { 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 1, 2 }, // duplicates to see mergesort
-																					// stability & quicksort count
-																					// behavior
-		};
+		int[][] tests = { { 3, 2, 1 }, { 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 1, 2 }, };
 
 		for (int[] src : tests) {
 			System.out.println("\nArray: " + Arrays.toString(src));
 
-			int[] a1 = Arrays.copyOf(src, src.length);
+			int [] a1 = src.clone();
 			insertionSort(a1);
 			System.out.println("Insertion : " + Arrays.toString(a1) + " | comps=" + isComps);
 
-			int[] a2 = Arrays.copyOf(src, src.length);
+			int[] a2 = src.clone();
 			mergeSort(a2);
 			System.out.println("Merge     : " + Arrays.toString(a2) + " | comps=" + msComps);
 
-			int[] a3 = Arrays.copyOf(src, src.length);
+			int[] a3 = src.clone();
 			quickSort(a3);
 			System.out.println("Quick     : " + Arrays.toString(a3) + " | comps=" + qsComps);
 		}
