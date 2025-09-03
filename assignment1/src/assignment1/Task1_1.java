@@ -2,7 +2,7 @@ package assignment1;
 
 import java.util.Arrays;
 
-public class Task1 {
+public class Task1_1 {
 
 //    a recursive function 
 //    named nextPermutation that generates the next permutation 
@@ -10,7 +10,6 @@ public class Task1 {
 	public static boolean nextPermutationRec(int[] a, int start, int len) {
 		if (len <= 1)
 			return false; // no permutations for 0 and 1 element
-
 		// Find the position 'pos' of the maximum element n
 		int n = len;
 		int pos = -1;
@@ -71,19 +70,3 @@ public class Task1 {
 	}
 }
 
-/**
- * the input int[] a = {1, 2, 3}; is a permutation {1..a.length}.
- * 
- * Returns true iff there exists a next permutation; the array is modified
- * in-place to that next permutation. Returns false if this was already the last
- * permutation; the array remains unchanged.
- * 
- * time and space complexity: 
- * Time per call: O(n) in the size of the current array to find n
- * if rotation is included. 
- * Generating all permutations costs O(n · n!). 
- * Space: O(n) call stack in the worst case due to recursion depth.
- * 
- * Example: Input: [1,2,3] output: [1, 2, 3] [1, 3, 2] [3, 1, 2] [2, 1, 3] [2,
- * 3, 1] [3, 2, 1] false (no change)[3, 2, 1]
- */

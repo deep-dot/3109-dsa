@@ -5,10 +5,9 @@ import java.util.Arrays;
 
 public class Task2 {
 
-	// ---- counters ----
 	public static long qsComps, msComps, isComps;
 
-	// ---- insertion sort (counts comparisons) ----
+	// insertion sort
 	public static long insertionSort(int[] a) {
 		isComps = 0;
 		for (int i = 1; i < a.length; i++) {
@@ -19,7 +18,6 @@ public class Task2 {
 				isComps++;
 			}
 		}
-		
 		return isComps;
 	}
 
@@ -67,44 +65,6 @@ public class Task2 {
 		return msComps;
 	}
 
-//	When merge(a, first, mid, last) runs, both halves a[first..mid] and a[mid+1..last] are already sorted in-place by the two earlier msort calls. merge then uses indices to read those actual values:
-//
-//		first1 is a cursor in the left half → current value is a[first1]
-//
-//		first2 is a cursor in the right half → current value is a[first2]
-//
-//		index is where we’re writing in temp
-//
-//		Because Java arrays are reference types, every call works on the same array object. So when msort(a, first, mid) returns, it has already rearranged the numbers in a[first..mid]. merge “knows” the values simply by reading a[i] at those indices.
-//
-//		Tiny trace to make it concrete
-//
-//		Start: a = [5, 2, 4, 6]
-//
-//		msort(a, 0, 1) sorts the left half in place → a becomes [2, 5, 4, 6]
-//
-//		msort(a, 2, 3) sorts the right half (already [4,6]) → a stays [2, 5, 4, 6]
-//
-//		merge(a, 0, 1, 3) now sees:
-//
-//		left half = a[0..1] = [2,5]
-//
-//		right half = a[2..3] = [4,6]
-//
-//		Inside merge:
-//
-//		Set i=0 (left), j=2 (right), k=0 (temp write)
-//
-//		Compare values a[i]=2 and a[j]=4 → take 2 → temp[0]=2, i=1, k=1
-//
-//		Compare a[i]=5 and a[j]=4 → take 4 → temp[1]=4, j=3, k=2
-//
-//		Compare a[i]=5 and a[j]=6 → take 5 → temp[2]=5, i=2, k=3
-//
-//		Left side finished; copy leftover right (6) → temp[3]=6
-//
-//		Copy temp[0..3] back to a[0..3] → a = [2,4,5,6]
-
 	// quicksort
 	public static long quickSort(int[] a) {
 		qsComps = 0;
@@ -150,9 +110,8 @@ public class Task2 {
 		a[j] = t;
 	}
 
-	// ---- tiny self-checks on size 3–4 arrays ----
 	public static void main(String[] args) {
-		int[][] tests = { { 3, 2, 1 }, { 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 1, 2 }, };
+		int[][] tests = {{ 3, 2, 1 }, { 2, 1, 3 }, { 3, 1, 2, 0 }, { 1, 1, 2 }};
 
 		for (int[] src : tests) {
 			System.out.println("\nArray: " + Arrays.toString(src));

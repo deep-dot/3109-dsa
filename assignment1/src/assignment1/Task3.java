@@ -37,7 +37,7 @@ public class Task3 {
 
 			totalPerm++;
 
-		} while (Task1.nextPermutationRec(a, 0, a.length));
+		} while (Task1_1.nextPermutationRec(a, 0, a.length));
 
 		double aveIns = (double) iscmps / totalPerm;
 		double aveMer = (double) mscmps / totalPerm;
